@@ -15,14 +15,8 @@
 
     <!--нижняя панель для отправки сообщений-->
     <HBox fx:id="prBottomPanel">
-
-        <!--TODO pr.window opening.Deleted-->
-        <!--<TextField fx:id="prTextField" onAction="#sendMsgInPrivateChat" promptText="Введите текст" HBox.hgrow="ALWAYS"/>-->
-        <!--<Button fx:id="prBtnSend" onAction="#sendMsgInPrivateChat" text="Send"/>-->
-        <!--TODO pr.window opening.Added-->
         <TextField fx:id="prTextField" onAction="#sendPrivateMsg" promptText="Введите текст" HBox.hgrow="ALWAYS"/>
         <Button fx:id="prBtnSend" onAction="#sendPrivateMsg" text="Send"/>
-
     </HBox>
 
 </VBox>

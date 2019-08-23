@@ -65,7 +65,6 @@
                     <!--для каждого сообщения отдельная метка-->
                 </VBox>
             </ScrollPane>
-
             <!--нижняя панель для отправки сообщений-->
             <!--в момент старта место в ?памяти? под окно не выделяется, пока оно невидимо-->
             <HBox fx:id="bottomPanel" managed="true" visible="true">
@@ -74,12 +73,6 @@
             </HBox>
         </VBox>
         <!--кликабельный список пользователей(правая панель)-->
-
-        <!--TODO pr.window opening.Deleted-->
-        <!--<ListView fx:id="clientList" managed="true" visible="true" onMouseClicked="#tryToInviteIntoPrivateChat" ></ListView>-->
-        <!--TODO pr.window opening.Added-->
         <ListView fx:id="clientList" managed="true" visible="true" onMouseClicked="#tryToOpenPrivateMessageWindow" ></ListView>
-
     </HBox>
-
 </VBox>
