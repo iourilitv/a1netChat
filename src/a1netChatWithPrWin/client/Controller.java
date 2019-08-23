@@ -108,7 +108,7 @@ public class Controller {
     private boolean isAuthorized;
 
     //static - чтобы использовать в потоке FX application
-    private static String chatCompanionNick;
+    private /*static*/ String chatCompanionNick;//TODO deleted static.Check
 
     //TODO pr.window opening.Deleted
     //чтобы закрыть окно приватного чата в методе connect
@@ -116,7 +116,7 @@ public class Controller {
     //TODO pr.window opening.Added
     //чтобы закрыть окно приватного чата в методе
     //static - чтобы использовать в потоке FX application
-    private static PrivateMsgWindow prMsgWindow;
+    private /*static*/ PrivateMsgWindow prMsgWindow;//TODO deleted static.Works
 
     private String nick;
 
