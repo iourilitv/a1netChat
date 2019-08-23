@@ -174,7 +174,15 @@ javafx.fxml.LoadException: Controller value already specified.
    где prMsgLabel естественно отсутствует.
 
 Именно поэтому у Вас есть два варианта решения именно данной проблемы:
-РАБОТАЕТ! Вариант 1. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
+РАБОТАЕТ Вариант 1! 
+Рано радовался. Теперь вообще не понятно, как это работает. 
+Но есть две ошибки в IDEA: 
+	- 2 шт. onAction="#sendPrivateMsg"(кнопка и тестовое поле) в privateMsgWindow.fxml стали красным (IDEA это считает двуми ошибками) и 
+	- метод sendPrivateMsg в Controller стал не активным.
+Но, приложение работает правильно!?
+Попытался закомментить  метод sendPrivateMsg в Controller  или onAction="#sendPrivateMsg", но тогда все ломается.
+Александр, можете прокомментировать как это работает? По какому событию отправляется сообщение из приватного чата?
+Вариант 1. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
     В конструкторе PrivateMsgWindow вы инициализируете FXML следущим образом:
 FXMLLoader loader = new FXMLLoader();
 loader.setController(controller);

@@ -106,25 +106,15 @@ public class Controller {
     DataOutputStream out;
 
     private boolean isAuthorized;
-
-    //static - чтобы использовать в потоке FX application
-    private /*static*/ String chatCompanionNick;//TODO deleted static.Check
-
-    //TODO pr.window opening.Deleted
-    //чтобы закрыть окно приватного чата в методе connect
-    //private static PrivateChatStage prStage;
-    //TODO pr.window opening.Added
-    //чтобы закрыть окно приватного чата в методе
-    //static - чтобы использовать в потоке FX application
-    private /*static*/ PrivateMsgWindow prMsgWindow;//TODO deleted static.Works
-
-    private String nick;
+    private String chatCompanionNick;//имя партнера по приватному чату
+    private PrivateMsgWindow prMsgWindow;//окно приватного сообщения
+    private String nick;//свое имя
 
     final String IP_ADRESS = "localhost";//IP 127.0.0.1.
     final int PORT = 8189;
 
-    public Controller() {
-    }
+    /*public Controller() {
+    }*/
 
     //метод отображения элементов GUI в режиме Авторизован/Неавторизован
     public void setAuthorized(boolean isAuthorized) {
@@ -231,19 +221,12 @@ public class Controller {
                                     break;
                                 }
 
-                                //если пришло подтверждение регистрации, отправляем запрос на авторизацию, не прерывая процесс//TODO Не работает
+                                //если пришло подтверждение регистрации, закрываем форму авторизации и открываем окно приватного чата
                                 if (str.startsWith("/regok")) {
                                     //скрываем элементы GUI для регистрации
                                     setRegistered(true);
                                     //открываем элементы GUI для авторизации
                                     setAuthorized(false);
-
-                                    //разделяем сообщение на три части
-                                    //TODO Не работает авторизация после регистрации.Удалил.Не достаточно
-                                    //int splitLimit = 3;
-                                    //String[] tokens = str.split(" ", splitLimit);
-                                    //отправляем сообщение с логином и паролем для регистрации
-                                    //out.writeUTF("/auth " + tokens[1] + tokens[2]);
                                 }
                             } else {
                                 //выводим сообщения в панель регистрационной формы
@@ -283,34 +266,8 @@ public class Controller {
                                     });
                                 }
 
-                                //TODO pr.window opening.Deleted
-                                //***Обработка запросов на инициализацию и закрытие персонального чата***
-                                /*if (str.startsWith("/inv")) {//всегда в строке ник партнера
-                                    // ***Обработка запроса на закрытие персонального чата***
-                                    if (str.startsWith("/invend")) {
-                                        //выводим пользователю сервисное сообщение в окно основного чата.
-                                        showMessage(vBoxChat, Pos.TOP_LEFT, "service: Your partner " + chatCompanionNick + " has left. Your private chat window has been closed.");
-                                        //Обнуляем ник партнера по чату
-                                        chatCompanionNick = null;
-                                        //закрываем свое окно приватного чата, если партнер его закрыл
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                prStage.close();
-                                            }
-                                        });
-                                    }
-                                    //передаем сообщения на проверку в метод инициализации прив.чата
-                                    initPrivateChat(str);
-                                }*/
-
-                                //TODO onlyPrivateMsgWindow.Переписать?
                                 //обрабатываем полученные сообщения из приватного чата
                                 if (str.startsWith("/w")) {
-
-                                    //TODO временно
-                                    System.out.println("connect.if (str.startsWith(\"/w\")).str: " + str);
-
                                     int splitLimit = 3;
                                     String[] temp = str.split(" ", splitLimit);
                                     //выделяем ник и собственно текст сообщения
@@ -374,9 +331,8 @@ public class Controller {
             out.writeUTF("/reg " + regFormNickField.getText() + " " + regFormLoginField.getText() + " " + regFormPasswordField.getText());
 
             //TODO Временно
-            System.out.println("getRegistration() str:" + "/reg " + regFormNickField.getText() + " " + regFormLoginField.getText() + " " + regFormPasswordField.getText());
+            //System.out.println("getRegistration() str:" + "/reg " + regFormNickField.getText() + " " + regFormLoginField.getText() + " " + regFormPasswordField.getText());
 
-            //Не нужно очищать поле, если не зарегистрировался, чтобы не вбивать еще раз.//TODO Проверить надо ли?
             regFormNickField.clear();//очищаем поле имени в чате
             regFormLoginField.clear();//очищаем поле логина
             regFormPasswordField.clear();//очищаем поле пароля
@@ -418,52 +374,6 @@ public class Controller {
         }
     }
 
-    //TODO pr.window opening.Deleted
-    /*//метод для приглашения в приватный чат выбранного в списке ник
-    @FXML
-    public void tryToInviteIntoPrivateChat(MouseEvent mouseEvent) throws IOException {
-        //проверяем сколько было кликов мышью
-        if (mouseEvent.getClickCount() == 2) {
-
-            //TODO Временно
-            System.out.println("Двойной клик");
-
-            //запрещаем кликать на свой ник в списке
-            if (clientList.getSelectionModel().getSelectedItem().equals(nick)){
-                //Выводим предупреждение пользователю в GUI
-                showMessage(vBoxChat, Pos.TOP_LEFT, "service: Нельзя выбрать самого себя!");
-                //Обнуляем ник партнера по чату
-                chatCompanionNick = null;
-
-                //TODO временно
-                System.out.println("Нельзя выбрать самого себя!");
-
-                return;
-            }
-
-            //проверяем не начат ли уже с кем-то приватный чат
-            //другой не сможет пригласить, если пользователь уже чатится с кем-то приватно
-            if (chatCompanionNick == null) {
-                //резервируем прив.чат для партнера
-                chatCompanionNick = clientList.getSelectionModel().getSelectedItem();
-                //отправляем партнеру приглашение початиться
-                try {
-                    // отправляем сообщение приглашение партнеру начать приватный чат
-                    out.writeUTF("/invto " + chatCompanionNick);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else{
-                //Выводим предупреждение пользователю в GUI
-                showMessage(vBoxChat, Pos.TOP_LEFT, "service: Ваш приватный чат занят!");
-
-                //TODO временно
-                System.out.println("Ваш приватный чат занят!");
-
-            }
-        }
-    }*/
-    //TODO pr.window opening.Added
     //метод открытия окна отправки приватного сообщения
     @FXML
     private void tryToOpenPrivateMessageWindow(MouseEvent mouseEvent) throws IOException {
@@ -493,85 +403,6 @@ public class Controller {
         }
     }
 
-    //TODO pr.window opening.Deleted
-    //метод инициализации окна приватного чата
-    /*private void initPrivateChat(String str) {
-        try {
-            //выделяем ник партнера по чату из служебного сообщения
-            String[] temp = str.split(" ", 2);
-
-            //если приглашение початиться пришло от партнера
-            if (str.startsWith("/invto")) {
-                //проверяем свободен ли мой приватный чат
-                if (chatCompanionNick == null) {
-                    //если мой чат тоже свободен, резервируем его для ника партнера
-                    chatCompanionNick = temp[1];
-                    //инициализируем приватный чат
-                    startPrivateChat();
-                    //отправляем на мой сервер подтверждение
-                    out.writeUTF("/invok " + chatCompanionNick);
-                } else {
-                    //отправляем на мой сервер отказ чатиться
-                    out.writeUTF("/invnot " + chatCompanionNick);
-                }
-                return;
-            }
-
-            //если от партнера пришел отказ(его чат занят)
-            if (str.startsWith("/invnot")) {
-                //Выводим служебное сообщение пользователю в GUI
-                showMessage(vBoxChat, Pos.TOP_LEFT, "service: Адресат занят другим приватным чатом!");
-
-                //TODO Временно.
-                System.out.println("Адресат занят другим приватным чатом!");
-
-                return;
-            }
-
-            //если от партнера пришло подтверждение, что все готово начать чат
-            if (str.startsWith("/invok")) {
-                //инициализируем приватный чат
-                startPrivateChat();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    //TODO pr.window opening.Deleted
-    //если приватный чат инициализирован, открыть новое окно
-    //и подтверждаем готовность инициализации приватного чата
-    /*private void startPrivateChat(){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //открываем отдельное окно для приватного чата
-                    prStage = new PrivateChatStage(Controller.this, prVBoxChat);
-                    prStage.show();
-
-                    //обработчик закрытия окна персонального чата
-                    prStage.setOnCloseRequest(event -> {
-                        //отправляем запрос партнеру по чату о закрытии окна чата
-                        //если окно закрывается после сообщения от партнера о выходе из приватного чата,
-                        // а не по крестику закрыть окно
-                        if(chatCompanionNick != null){
-                            try {
-                                out.writeUTF("/invend " + chatCompanionNick);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            //Обнуляем ник партнера по чату
-                            chatCompanionNick = null;
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
-    //TODO pr.window opening.Added
     //Метод открывает окно для приема и отправки одного приватного сообщения
     private void openPrivateMessageWindow(String nick, String msg){
         Platform.runLater(new Runnable() {
@@ -580,20 +411,15 @@ public class Controller {
                 try {
                     //открываем отдельное окно для приватного чата
                     prMsgWindow = new PrivateMsgWindow(Controller.this, nick, msg);
-
                     //всегда показываем окно выше остальных окон
                     prMsgWindow.isAlwaysOnTop();
                     prMsgWindow.show();
-
-                    //называем окно в зависимости от направления
-                    //TODO pri...fxml deleted fx:controller.Added.Works!
-                    // TODO ERR.java.lang.NullPointerException.
+                    //выводим входное сообщение в окно приватного чата в зависимости от направления
                     if(msg != null){//для отправки сообщения
                         prMsgLabel.setText(msg);
                     } else {//при получении сообщения
                         prMsgLabel.setText("Введите сообщение и нажмите Send или Enter");
                     }
-
                     //обработчик закрытия окна персонального чата
                     prMsgWindow.setOnCloseRequest(event -> {
                         //закрываем по крестику окно приватного сообщения
@@ -625,21 +451,17 @@ public class Controller {
         try {
             //принимаем строку из текстового поля
             String str = textField.getText();
-
-            //TODO Don't allow sending of empty string or with only break spaces.Добавил
             //не отправляем пустую строку, в том числе из одних пробелов
             if(str.equals("") || str.split(" ").length < 1) {//TODO Важно! если str = "", то str.split(" ").length = 1!!!
                 textField.clear();
                 textField.requestFocus();
                 return;
             }
-
             //не показываем служебные сообщения у себя
             if(!str.startsWith("/")) {
                 //выводим пользователю собственное сообщение в окно основного чата.
                 showMessage(vBoxChat, Pos.TOP_RIGHT, str);
             }
-            //TODO L8hwTask5.Add msg to prChat.Добавил
             //отправляем сообщение на сервер(ClientHandler)
             out.writeUTF(str);
             //очищаем текстовое поле и возвращаем ему курсор
@@ -650,37 +472,7 @@ public class Controller {
         }
     }
 
-    //TODO pr.window opening.Deleted
-    //метод для отправки сообщений в приватном чате
-    /*@FXML
-    public void sendMsgInPrivateChat (ActionEvent actionEvent) {
-        try {
-            //принимаем строку из текстового поля
-            String str = prTextField.getText();
-
-            //не отправляем пустую строку, в том числе из одних пробелов
-            if(str.equals("") || str.split(" ").length < 1) {
-                prTextField.clear();
-                prTextField.requestFocus();
-                return;
-            }
-
-            //не показываем служебные сообщения у себя
-            if(!str.startsWith("/")) {
-                //выводим пользователю собственное сообщение в окно приватного чата.
-                showMessage(prVBoxChat, Pos.TOP_RIGHT, str);
-            }
-            //отправляем сообщение на сервер(ClientHandler)
-            DataOutputStream out = ((PrivateChatStage)prBtnSend.getScene().getWindow()).out;
-            out.writeUTF("/w " + chatCompanionNick + " " + str);
-            //очищаем текстовое поле и возвращаем ему курсор
-            prTextField.clear();
-            prTextField.requestFocus();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-    //TODO pr.window opening.Added //НЕ используется для окна одного приватного сообщения!
+    //TODO Почему стал не активным после переноса привязки к контроллеру из fxml в stage!
     //метод для отправки сообщений в приватном чате
     @FXML
     public void sendPrivateMsg (ActionEvent actionEvent) {
@@ -698,10 +490,6 @@ public class Controller {
             //отправляем сообщение на сервер(ClientHandler)
             DataOutputStream out = ((PrivateMsgWindow)prBtnSend.getScene().getWindow()).out;
             out.writeUTF("/w " + nickTo + " " + str);
-
-            //TODO временно
-            System.out.println("sendPrivateMsg.out.writeUTF(\"/w \" + nickTo + \" \" + str): " + "/w " + nickTo + " " + str);
-
             //закрываем после отправки окно приватного сообщения
             prMsgWindow.close();
         } catch (IOException e) {
