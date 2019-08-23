@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?scenebuilder-stylesheet /a1netChatWithPrWin/client/Style_main.css?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
+      fx:controller="a1netChatWithPrWin.client.Controller">
+    <stylesheets><URL value="@/a1netChatWithPrWin/client/Style_main.css"></URL> </stylesheets>
+
+    <!--верхняя панель для авторизации-->
+    <VBox fx:id="registrationForm" managed="true" visible="true">
+        <VBox fx:id="regFormTopLabelsBox" managed="false" visible="false">
+            <Label fx:id="regFormTitleLabel" text="Регистрационная форма"/>
+            <Label text="Придумайте и введите свои данные." wrapText="true"/>
+            <Label text="Уникальный Nickname(имя в чате) и логин," wrapText="true"/>
+            <Label text="состоящие только из латинских букв и цифр" wrapText="true"/>
+            <Label text="Пароль, не менее 8-ми символов, состоящий из:" wrapText="true"/>
+            <Label text="- латинских букв в верхнем и нижнем регистре;" wrapText="true"/>
+            <Label text="- цифр и спецсимволов на клавиатуре." wrapText="true"/>
+        </VBox>
+
+        <HBox fx:id="regFormNicknameBox" managed="false" visible="false">
+            <Label fx:id="regFormNicknameLabel" text="Nickname:" alignment="CENTER_RIGHT"/>
+            <TextField fx:id="regFormNickField" HBox.hgrow="ALWAYS" promptText="Имя в чате"></TextField>
+        </HBox>
+
+        <HBox>
+            <Label fx:id="regFormLoginLabel" text="Логин:" managed="true" visible="true" alignment="CENTER_RIGHT"/>
+            <TextField fx:id="regFormLoginField" HBox.hgrow="ALWAYS" promptText="Логин"></TextField>
+        </HBox>
+
+        <HBox>
+            <Label fx:id="regFormPasswordLabel" text="Пароль:" managed="true" visible="true" alignment="CENTER_RIGHT"/>
+            <PasswordField fx:id="regFormPasswordField" HBox.hgrow="ALWAYS" promptText="Пароль"/>
+        </HBox>
+
+        <!--поле для вывода служебных сообщений во время регистрации-->
+        <TextArea fx:id="regFormTextArea" editable="false" managed="true" visible="true"/>
+
+        <!--кнопки этапа регистрации-->
+        <HBox fx:id="regFormRegBtnsBox" managed="false" visible="false">
+            <!--кнопка отправки запроса на сохранение в БД данных из формы регистрации-->
+            <Button fx:id="regFormSendToRegisterBtn" managed="true" visible="true" text="Отправить" onAction="#getRegistration"/>
+            <!--кнопка отправки запроса на сохранение в БД данных из формы регистрации-->
+            <Button fx:id="regFormCancelBtn" managed="true" visible="true" text="Отмена" onAction="#cancelRegistration"/>
+        </HBox>
+
+        <!--кнопки этапа авторизации-->
+        <HBox fx:id="regFormAuthBtnsBox" managed="true" visible="true">
+            <!--кнопка отправки запроса на авторизацию-->
+            <Button fx:id="regFormAuthBtn" managed="true" visible="true" text="Авторизоваться" onAction="#tryToAuth"/>
+            <!--кнопка отправки запроса на открытие формы регистрации-->
+            <Button fx:id="regFormRegisterBtn" managed="true" visible="true" text="Регистрация" onAction="#tryToRegister"/>
+        </HBox>
+    </VBox>
+
+    <!--разделенная на два панель основного чата-->
+    <HBox fx:id="mainChatPanel" managed="false" visible="false" VBox.vgrow="ALWAYS">
+        <!--левая панель для отправки и отображения сообщений в чате-->
+        <VBox fx:id="mainChatVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPaneChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <VBox fx:id="vBoxChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <!--для каждого сообщения отдельная метка-->
+                </VBox>
+            </ScrollPane>
+
+            <!--нижняя панель для отправки сообщений-->
+            <!--в момент старта место в ?памяти? под окно не выделяется, пока оно невидимо-->
+            <HBox fx:id="bottomPanel" managed="true" visible="true">
+                <TextField fx:id="textField" onAction="#sendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btn1" onAction="#sendMsg" text="Send" />
+            </HBox>
+        </VBox>
+        <!--кликабельный список пользователей(правая панель)-->
+
+        <!--TODO pr.window opening.Deleted-->
+        <!--<ListView fx:id="clientList" managed="true" visible="true" onMouseClicked="#tryToInviteIntoPrivateChat" ></ListView>-->
+        <!--TODO pr.window opening.Added-->
+        <ListView fx:id="clientList" managed="true" visible="true" onMouseClicked="#tryToOpenPrivateMessageWindow" ></ListView>
+
+    </HBox>
+
+</VBox>

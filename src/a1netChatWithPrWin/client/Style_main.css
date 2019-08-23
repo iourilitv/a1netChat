@@ -1,0 +1,105 @@
+HBox {
+    -fx-spacing:5;
+}
+
+#registrationForm {
+    -fx-padding: 10;/*отступ от границ*/
+    -fx-border-width: 3;/*ширина границы*/
+    -fx-spacing:10;/*отступ между элементами*/
+}
+
+#regFormTopLabelsBox {
+    -fx-min-height: 150;
+    -fx-pref-height: 150;
+    -fx-spacing:3;
+}
+
+#regFormTitleLabel {
+    -fx-font-size: 20;/*размет шрифта*/
+}
+
+#regFormNicknameBox {
+    -fx-spacing:5;
+}
+
+#regFormNicknameLabel, #regFormLoginLabel, #regFormPasswordLabel {
+    -fx-min-width: 65;
+    -fx-pref-width-width: 65;
+    -fx-max-width: 65;
+    -fx-padding: 3.5;
+}
+
+#regFormTextArea {
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+    -fx-max-height: 30;
+}
+
+#regFormRegBtnsBox {
+    -fx-spacing:5;
+}
+
+#regFormSendToRegisterBtn {
+
+}
+
+#regFormCancelBtn {
+    -fx-background-color: red;/*цвет фона*/
+    -fx-text-fill: white;/*цвет текста*/
+    /*For a complete list of all 148 named colors, consult the CSS reference page online at
+    http://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html#typecolor.
+    for RGB using -fx-background-color: #f5f5f5*/
+}
+
+#regFormAuthBtnsBox {
+    -fx-spacing:5;
+}
+
+#regFormAuthBtn {
+
+}
+
+#regFormRegisterBtn {
+
+}
+
+#mainChatPanel {
+    -fx-padding: 10;
+    -fx-border-width: 3;
+    -fx-spacing:10;
+}
+
+#mainChatVBox {
+    -fx-spacing:10;
+}
+
+#scrollPaneChat {
+    -fx-mix-height: 300;
+    -fx-pref-height: 300;
+    -fx-mix-width: 300;
+    -fx-pref-width: 300;
+}
+
+#vBoxChat {
+    -fx-mix-width: 230;
+    -fx-pref-width: 230;
+}
+
+#bottomPanel {
+    -fx-min-height: 30;
+    -fx-spacing:5;
+}
+
+#textField {/*in the main chat window*/
+
+}
+
+#btn1 {/*Send button in the main chat*/
+
+}
+
+#clientList {
+    -fx-min-width: 70;
+    -fx-pref-width: 70;
+    -fx-max-width: 70;
+}
