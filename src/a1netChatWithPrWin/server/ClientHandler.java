@@ -131,27 +131,6 @@ public class ClientHandler {
                                     break;
                                 }
 
-                                //TODO pr.msg receiving.Deleted
-                                /*//сервер принимает от клиента служебные сообщения приглашения в персональный чат
-                                // и переправляет его на сервер партнеру
-                                if (str.startsWith("/inv")) {
-                                    //выделяем ник партнера по чату из служебного сообщения
-                                    String[] temp = str.split(" ", 2);
-                                    //кому отправлять
-                                    String chatCompanionNick = temp[1];
-                                    //TODO проверяем не отправляем ли самому себе.Лишнее?
-                                    if(!ClientHandler.this.getNick().equals(chatCompanionNick)){
-                                        //переписываем изначальное сообщение от клиента - заменяем на отправителя
-                                        String msg = temp[0] + " " + ClientHandler.this.getNick();
-
-                                        //TODO Временно.OK
-                                        System.out.println("2.ClientHandler. nick: " + ClientHandler.this.getNick() + " sent msg: " + msg);
-
-                                        //сервер отправляет измененное сообщение на сервер партнеру
-                                        server.sendMsgToNick(ClientHandler.this, chatCompanionNick, msg);
-                                    }
-                                }*/
-
                                 //оправка персонального сообщения
                                 if(str.startsWith("/w")) {
                                     //ClientHandler.this вместо nick, чтобы отправить предупреждение отправителю,
@@ -179,10 +158,6 @@ public class ClientHandler {
                                             //проверяем не находится ли получатель черном списке отправителя
                                             if(!AuthService.checkUserInBlacklistDB(ClientHandler.this.getNick(), nickOfRecipient)){
                                                 //отправляем сообщение адресату
-
-                                                //TODO pr.msg receiving.Deleted
-                                                //server.sendMsgToNick(ClientHandler.this, nickOfRecipient, str);
-                                                //TODO pr.msg receiving.Added
                                                 server.sendMsgToNick(ClientHandler.this, nickOfRecipient, msg);
 
                                             } else{
