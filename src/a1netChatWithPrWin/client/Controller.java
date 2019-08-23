@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -378,7 +379,6 @@ public class Controller {
     @FXML
     private void tryToOpenPrivateMessageWindow(MouseEvent mouseEvent) throws IOException {
         String nickTo;//кому отправляем приватное сообщение
-
         //проверяем сколько было кликов мышью. Нужен двойной клик
         if (mouseEvent.getClickCount() == 2) {
 
@@ -401,6 +401,44 @@ public class Controller {
                 openPrivateMessageWindow(nickTo, null);
             }
         }
+    }
+
+    //TODO Add contextmenu by right button mouse click.Added.Works(double click)
+    //метод вызова контекстного меню по двойному клику мыши на ник в списке авторизованных пользователей
+    @FXML
+    private void tryToOpenContextMenu(MouseEvent mouseEvent) throws IOException {
+
+        //TODO Test right button mouse click.Added.Works
+        if(mouseEvent.getButton() == MouseButton.SECONDARY){
+            System.out.println("MouseButton.SECONDARY");
+        }
+
+
+
+        /*String nickTo;//кому отправляем приватное сообщение
+
+        //проверяем сколько было кликов мышью. Нужен двойной клик
+        if (mouseEvent.getClickCount() == 2) {
+
+            //TODO Временно
+            System.out.println("Двойной клик");
+
+            //запоминаем ник, который выбрали в списке
+            nickTo = clientList.getSelectionModel().getSelectedItem();
+
+            //запрещаем кликать на свой ник(nick) в списке
+            if (nickTo.equals(nick)){
+                //Выводим предупреждение пользователю в GUI
+                showMessage(vBoxChat, Pos.TOP_LEFT, "service: Нельзя выбрать самого себя!");
+
+                //TODO временно
+                System.out.println("Нельзя выбрать самого себя!");
+
+            } else {
+                //открываем окно для ввода сообщения
+                openPrivateMessageWindow(nickTo, null);
+            }
+        }*/
     }
 
     //Метод открывает окно для приема и отправки одного приватного сообщения
@@ -497,7 +535,7 @@ public class Controller {
         }
     }
 
-    //Метод вывода полученных и сервисных сообщений в чаты пользователя
+    //Метод вывода полученных и сервисных сообщений в общий чат пользователя
     private void showMessage(VBox vBoxCh, Pos position, String msg){
         Platform.runLater(new Runnable() {
             @Override
