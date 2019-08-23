@@ -6,10 +6,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
-      fx:controller="a1netChatWithPrWin.client.Controller">
+        >
+    <!--TODO pri...fxml deleted fx:controller//fx:controller="a1netChatWithPrWin.client.Controller"-->
 
-    <Label fx:id="prMsgLabel" HBox.hgrow="ALWAYS">
-        <!--верхняя метка для отображения полученного сообщения-->
+      <Label fx:id="prMsgLabel" HBox.hgrow="ALWAYS">
+          <!--верхняя метка для отображения полученного сообщения-->
     </Label>
 
     <!--нижняя панель для отправки сообщений-->

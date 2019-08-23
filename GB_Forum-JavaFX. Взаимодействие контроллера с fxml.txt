@@ -174,7 +174,7 @@ javafx.fxml.LoadException: Controller value already specified.
    где prMsgLabel естественно отсутствует.
 
 Именно поэтому у Вас есть два варианта решения именно данной проблемы:
-Вариант 1. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
+РАБОТАЕТ! Вариант 1. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
     В конструкторе PrivateMsgWindow вы инициализируете FXML следущим образом:
 FXMLLoader loader = new FXMLLoader();
 loader.setController(controller);

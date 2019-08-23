@@ -44,6 +44,10 @@ public class PrivateMsgWindow extends Stage {
         this.out = controller.getOut();
 
         FXMLLoader loader = new FXMLLoader();
+
+        //TODO pri...fxml deleted fx:controller.Added
+        loader.setController(controller);
+
         Parent root = loader.load(getClass().getResourceAsStream("privateMsgWindow.fxml"));
 
         //называем окно в зависимости от направления

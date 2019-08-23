@@ -585,13 +585,14 @@ public class Controller {
                     prMsgWindow.show();
 
                     //называем окно в зависимости от направления
-                    //TODO ERR.java.lang.NullPointerException
-                    /*if(msg != null){//для отправки сообщения
+                    //TODO pri...fxml deleted fx:controller.Added
+                    // TODO ERR.java.lang.NullPointerException.
+                    if(msg != null){//для отправки сообщения
                         prMsgLabel.setText(msg);
                     } else {//при получении сообщения
                         prMsgLabel.setText("Введите сообщение и нажмите Send или Enter");
 
-                    }*/
+                    }
 
                     //обработчик закрытия окна персонального чата
                     prMsgWindow.setOnCloseRequest(event -> {
