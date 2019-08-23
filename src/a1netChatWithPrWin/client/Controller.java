@@ -475,6 +475,7 @@ public class Controller {
             //TODO Временно
             System.out.println("Двойной клик");
 
+            //запоминаем ник, который выбрали в списке
             nickTo = clientList.getSelectionModel().getSelectedItem();
 
             //запрещаем кликать на свой ник(nick) в списке
@@ -585,13 +586,12 @@ public class Controller {
                     prMsgWindow.show();
 
                     //называем окно в зависимости от направления
-                    //TODO pri...fxml deleted fx:controller.Added
+                    //TODO pri...fxml deleted fx:controller.Added.Works!
                     // TODO ERR.java.lang.NullPointerException.
                     if(msg != null){//для отправки сообщения
                         prMsgLabel.setText(msg);
                     } else {//при получении сообщения
                         prMsgLabel.setText("Введите сообщение и нажмите Send или Enter");
-
                     }
 
                     //обработчик закрытия окна персонального чата
@@ -680,7 +680,7 @@ public class Controller {
             e.printStackTrace();
         }
     }*/
-    //TODO pr.window opening.Added
+    //TODO pr.window opening.Added //НЕ используется для окна одного приватного сообщения!
     //метод для отправки сообщений в приватном чате
     @FXML
     public void sendPrivateMsg (ActionEvent actionEvent) {
