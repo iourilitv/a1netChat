@@ -1,0 +1,215 @@
+Форум GeekBrains.ru
+https://geekbrains.ru/topics/6381
+Тема.
+JavaFX. Взаимодействие контроллера с .fxml
+
+Проект: 
+Сетевой чат с GUI на JavaFX.
+Есть серверная часть(вопрос не о ней) и есть клиентская часть, где GUI формируется двумя файлами: 
+ mainChatStage.fxml(окно основного чата) и privateMsgWindow.fxml(окно приватного чата). Оба файла взаимодействуют с одним контроллером(но не работает и с двумя отдельными).
+ Логика: 
+ Сервер отвечает за коммуникацию между клиентами(не об этом вопрос).
+ Клиентское приложение принимает введенный текст, выводит сообщения в окно пользователя и отображает список подключившихся. 
+ Дополнительно: 
+ по двойному клику мыши на ник партнера открывается отдельное окно приватного сообщения, куда можно ввести сообщение и окно автоматически закроется после отправки. На другой стороне у партнера автоматически открывается такое же окно, но в нем еще и отображается принятое сообщение(!не работает!) в Label prMsgLabel. Партнер вводит свое сообщение в текстовое поле и процесс повторяется.
+
+Проблема 1:  Не отображается принятое сообщение в момент открытия окна на другой стороне.
+Я не могу вызвать элемент с ID prMsgLabel в файле privateMsgWindow.fxml из основного потока клиентского приложения. Пакет client класс Controller метод connect принимает сообщение с "/w" и открывает окно приватного чата. Не могу передать полученное сообщение в метку prMsgLabel в методе openPrivateMessageWindow(см.скрытый блок if), но вылетает исключение NullPointerException. 
+Код проекта в IDEA https://drive.google.com/open?id=1zHP10IqgyNktTGKQrmam4fxDMQrSfRz3 .
+
+Уже больше месяца пытаюсь решить. Перепробовал разные варианты найденные в сети - ничего не помогло.
+Буду благодарен за идеи и помощь, но...
+Пожалуйста основывайте ваши предложения на реально рабочем коде. Теории мне уже не достаточно.
+
+Александр Шаклеин:
+Уберите привязку контроллера в privateMsgWindow.fxml.
+В конструкторе PrivateMsgWindow после
+FXMLLoader loader = new FXMLLoader();
+пропишите
+loader.setController(controller);
+
+Проблема происходит по причине того, что запуске FXMLLoader loader.load(...) у Вас создаётся новый экземпляр класса Controller.
+Однако, я бы не рекомендовал использовать один контроллер для нескольких FXML. Каждый модуль должен выполнять свои функции. 
+Уж вынесите хотя бы в PrivateMsgWindow работу с приватными сообщениями.
+Более того, описание транспорта, поведения и т.д. в контроллере, который должен отвечать только за поведение - не айс. 
+Представьте, что Вам понадобится написать логику отработки сообщений вне JavaFX, а код отработки сообщений, 
+да и весь транспорт у вас уже завязан на контроллер JavaFX.
+
+Мой ответ:
+Александр, спасибо за идею, но не сработало. Лог ошибки ниже. 
+И подобная ошибка с загрузчиком возникала каждый раз, когда я пробовал что-то менять в процессе инициализации Stage. 
+В явном виде это не указано, значит где-то на этапе инициализации Stage. 
+И как работает fxml? 
+Я не нашел толковой литературы, где вообще рассматривается fxml и как это работает.
+
+И я конечно с вами согласен, что код плохой, и разделить надо. Уже нашел пример грамотной реализации, как вы рекомендуете и перепишу позже.
+Но я пробовал и подобный проект с двумя контроллерами и проблема та же - 
+не могу из основного потока (в Controller в методе connect по сообщению с "/w") вызвать элемент приватного fxml файла, который формирует приватное окно.
+И мало того, мне пришлось переменную prMsgWindow(экземпляр PrivateMsgWindow) сделать static, иначе не мог закрыть окно (prMsgWindow.close()) 
+после отправки сообщения из приватного окна(метод sendPrivateMsg). Лог ошибки ниже.
+Возможно, javafx вообще не применяется для таких задач, но я только учусь и хочу понимать ее возможности.
+
+Лог ошибки - идея Александра - 
+ошибка в клиенте в момент вызова метода openPrivateMessageWindow в Controller(двойной клик на нике в clientList):
+javafx.fxml.LoadException: Controller value already specified.
+unknown path:8
+
+	at javafx.fxml.FXMLLoader.constructLoadException(FXMLLoader.java:2597)
+	at javafx.fxml.FXMLLoader.access$100(FXMLLoader.java:103)
+	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:914)
+	at javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:971)
+	at javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:220)
+	at javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2707)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2527)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2425)
+	at a1netChatWithPrWin.client.PrivateMsgWindow.<init>(PrivateMsgWindow.java:49)
+	at a1netChatWithPrWin.client.Controller$2.run(Controller.java:581)
+	at com.sun.javafx.application.PlatformImpl.lambda$null$172(PlatformImpl.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$173(PlatformImpl.java:294)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$147(WinApplication.java:177)
+	at java.lang.Thread.run(Thread.java:748)
+
+Лог ошибки - если убрать static с prMsgWindow - 
+ошибка в клиенте при отправке сообщения из приватного окна(метод sendPrivateMsg в Controller на сроке 705 prMsgWindow.close();.
+В результате чего, окно отправки виснет (даже не очищается текстовое поле), но сообщение отправляется в основной чат и даже открывается приватное окно на другой стороне:
+Exception in thread "JavaFX Application Thread" java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1774)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Node.fireEvent(Node.java:8411)
+	at com.sun.javafx.scene.control.behavior.TextFieldBehavior.fire(TextFieldBehavior.java:179)
+	at com.sun.javafx.scene.control.behavior.TextInputControlBehavior.callAction(TextInputControlBehavior.java:178)
+	at com.sun.javafx.scene.control.behavior.BehaviorBase.callActionForEvent(BehaviorBase.java:218)
+	at com.sun.javafx.scene.control.behavior.TextInputControlBehavior.callActionForEvent(TextInputControlBehavior.java:127)
+	at com.sun.javafx.scene.control.behavior.BehaviorBase.lambda$new$11(BehaviorBase.java:135)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$KeyHandler.process(Scene.java:3964)
+	at javafx.scene.Scene$KeyHandler.access$1800(Scene.java:3910)
+	at javafx.scene.Scene.impl_processKeyEvent(Scene.java:2040)
+	at javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2501)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:217)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:149)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$352(GlassViewEventHandler.java:248)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:389)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:247)
+	at com.sun.glass.ui.View.handleKeyEvent(View.java:546)
+	at com.sun.glass.ui.View.notifyKey(View.java:966)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$147(WinApplication.java:177)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at sun.reflect.misc.Trampoline.invoke(MethodUtil.java:71)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at sun.reflect.misc.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	... 49 more
+Caused by: java.lang.NullPointerException
+	at a1netChatWithPrWin.client.Controller.sendPrivateMsg(Controller.java:705)
+	... 59 more
+
+Александр Шаклеин
+Юрий, 
+И к слову - javafx можно применять и для более сложных задач:)
+javafx.fxml.LoadException: Controller value already specified.
+Значит, что у Вас для FXML уже прописан контроллер. Я не зря написал, что необходимо снять привязку в privateMsgWindow.fxml
+Смысл в том, что если для fxml уже привязан контроллер, если я не ошибаюсь делается это в sceneBuildere (хотя можно и вручную, конечно), 
+то при вызове FXMLLoader.load() загрузчик находит в описании fxml описание контроллера и создаёт его экземпляр. 
+Соответственно, если для загруженной fxml уже назначен контроллер, то переназначить его уже нельзя - на что и указывает Вам ошибка
+
+Ответ.
+Конечно же в каждом fxml прописан контроллер. В данном примере в обоих прописан один. Иначе не работало бы вообще.
+И проблема как между ними сделать связь? Опять же, связь между экземплярами Controller или fxml? Они не видят друг друга.
+И второй лог по моему как раз об этом.
+Я уже пробовал создать массив контроллеров в MainClient и в контроллерах инифиализировать Stageы, но получаю ошибку в загрузчике.
+
+Александр Шаклеин
+Юрий,
+
+""И проблема как между ними сделать связь? Опять же, связь между экземплярами Controller или fxml? Они не видят друг друга.""
+
+Ну смотрите, если по простому: 
+* у Вас для каждой fxml прописан контроллер(в данном случае неважно какой)
+* сначала у вас создаётся основное окно, у которого контроллер Controller. При создании данного окна создаётся экземпляр класс Controller
+* далее при вызове определённого события(в Вашем примере на получении сообщения) создаётся новое окно privateMsgWindow.fxml, 
+   где также создаётся новый экземпляр класса Controller.
+* поле создания окна privateMsgWindow вы из первого экземпляра Controller пытаетесь получить доступ к переменной второго экземпляра
+  (что естественно невозможно, т.к. в первом экземпляре контроллера у Вас нет переменной prMsgLabel)
+* в первом экземпляре Controller у Вас нет переменной prMsgLabel по причине того, что первый экземпляр работает с основным окном, 
+   где prMsgLabel естественно отсутствует.
+
+Именно поэтому у Вас есть два варианта решения именно данной проблемы:
+Вариант 1. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
+    В конструкторе PrivateMsgWindow вы инициализируете FXML следущим образом:
+FXMLLoader loader = new FXMLLoader();
+loader.setController(controller);
+Parent root = loader.load(getClass().getResourceAsStream("privateMsgWindow.fxml"));
+    Тогда будет работать тот код, который у Вас не работает при попытке изменения переменной
+
+Вариант 2. В privateMsgWindow.fxml Вы вообще убираете привязку к контроллеру - это возможно. 
+   Используете в качестве контроллера другой объект к примеру:
+```
+class PrivateMessageController{
+@FXML
+Label prMsgLabel;
+.....
+PrivateMessageController(){
+}
+
+void setMessage(String message){
+   prMsgLabel.setText(message);
+}
+}
+```
+// где-то при вызове окна
+
+PrivateMessageController msgController = new PrivateMessageController();
+PrivateMsgWindow msgWindow = new PrivateMsgWindow(msgController);
+msgController.setMessage(message);
+
+/// Соотв-но меняете конструктор PrivateMsgWindow добавляете/меняете аргументы для приёма контроллера и опять же прописываете
+
+FXMLLoader loader = new FXMLLoader();
+loader.setController(msgController);
+Parent root = loader.load(getClass().getResourceAsStream("privateMsgWindow.fxml"));
+
+Таким же образом, Вы можете использовать в качестве контроллера сам PrivateMsgWindow и назначать именно его в качестве контроллера 
+при инициализации fxml.
+Однако, повторюсь - это очень упрощённое описание решение описанной проблемы и оно никоим образом не соответствует подходу clean code.
+
+
