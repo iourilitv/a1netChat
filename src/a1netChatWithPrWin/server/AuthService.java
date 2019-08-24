@@ -5,6 +5,8 @@ import java.sql.*;
 /**
  * Класс для организации сервиса авторизации и связи с БД
  * Связь БД и приложения осуществляется через посредника, JDBC драйвер(библиотека).
+ * Home work for lesson 2.
+ * @author Litvinenko Yuriy.
  */
 public class AuthService {
 
