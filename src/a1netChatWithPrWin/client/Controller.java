@@ -19,83 +19,79 @@ import java.net.Socket;
 import static javafx.scene.text.TextAlignment.RIGHT;
 
 public class Controller {
+    //***Панель Авторизационной формы***
+    //TODO mainChatFxmlStructureUpdate.Added
+    @FXML
+    VBox authFormPanel;//панель Авторизационной формы
+    @FXML
+    TextField authFormLoginField;//поле ввода логина
+    @FXML
+    TextField authFormPasswordField;//поле ввода пароля
+    @FXML
+    Button authFormAuthBtn;//кнопка Авторизоваться//TODO лишнее?
+    @FXML
+    Button authFormRegisterBtn;//кнопка Регистрация//TODO лишнее?
+    @FXML
+    Label authFormBottomLabel;//нижняя метка для вывода сообщений авторизационной формы//FIXME
 
+    //***Панель Регистрационной формы***
+    @FXML
+    VBox regFormPanel;
+    @FXML
+    VBox regFormTopLabelsBox;
+    @FXML
+    HBox regFormNicknameBox;
+    @FXML
+    TextField regFormNickField;
+    @FXML
+    TextField regFormLoginField;
+    @FXML
+    PasswordField regFormPasswordField;
+    @FXML
+    TextArea regFormTextArea;
+    @FXML
+    HBox regFormRegBtnsBox;
+    @FXML
+    Button regFormSendToRegisterBtn;
+    @FXML
+    Button regFormCancelBtn;
+    @FXML
+    HBox regFormAuthBtnsBox;
+    @FXML
+    Button regFormAuthBtn;
+    @FXML
+    Button regFormRegisterBtn;
+
+    //***Панель общего чата***
     @FXML
     //TODO mainChatFxmlStructureUpdate.Deleted
     //HBox mainChatPanel;
-    //TODO mainChatFxmlStructureUpdate.Deleted
-    SplitPane mainChatPanel;
-
+    //TODO mainChatFxmlStructureUpdate.Added
+    SplitPane mainChatPanel;//Панель общего чата
     @FXML
     ScrollPane scrollPaneChat;
-
     @FXML
     VBox vBoxChat;
-
     @FXML
     HBox bottomPanel;
-
     @FXML
     TextField textField;
-
     @FXML
     Button btn1;
     //ListView - динамическое представление для работы с GUI framework JavaFX
     @FXML
     ListView<String> clientList;
 
-    @FXML
-    VBox registrationForm;
-
-    @FXML
-    VBox regFormTopLabelsBox;
-
-    @FXML
-    HBox regFormNicknameBox;
-
-    @FXML
-    TextField regFormNickField;
-
-    @FXML
-    TextField regFormLoginField;
-
-    @FXML
-    PasswordField regFormPasswordField;
-
-    @FXML
-    TextArea regFormTextArea;
-
-    @FXML
-    HBox regFormRegBtnsBox;
-
-    @FXML
-    Button regFormSendToRegisterBtn;
-
-    @FXML
-    Button regFormCancelBtn;
-
-    @FXML
-    HBox regFormAuthBtnsBox;
-
-    @FXML
-    Button regFormAuthBtn;
-
-    @FXML
-    Button regFormRegisterBtn;
-
-    //переменные с pr в начале имени - для privateChat.fxml
+    //***Отдельное окно приватных сообщений***
+    // переменные с pr в начале имени - для privateChat.fxml
     @FXML
     VBox prVBoxChat;
-
     @FXML
     Label prMsgLabel;
-
     @FXML
     TextField prTextField;
-
     @FXML
     Button prBtnSend;
-
     @FXML
     HBox prBottomPanel;
 
@@ -120,7 +116,8 @@ public class Controller {
     /*public Controller() {
     }*/
 
-    //метод отображения элементов GUI в режиме Авторизован/Неавторизован
+    //TODO mainChatFxmlStructureUpdate.Deleted
+    /*//метод отображения элементов GUI в режиме Авторизован/Неавторизован
     public void setAuthorized(boolean isAuthorized) {
         this.isAuthorized = isAuthorized;
 
@@ -139,9 +136,9 @@ public class Controller {
             mainChatPanel.setVisible(true);
             mainChatPanel.setManaged(true);
         }
-    }
-
-    //метод отображения элементов GUI в режиме Зарегистрирован/Незарегистрирован
+    }*/
+    //TODO mainChatFxmlStructureUpdate.Deleted
+    /*//метод отображения элементов GUI в режиме Зарегистрирован/Незарегистрирован
     public void setRegistered(boolean isRegistered){
 
         //на всякий случай скрываем панель основного чата
@@ -177,6 +174,43 @@ public class Controller {
             //открываем блок кнопок авторизации
             regFormAuthBtnsBox.setVisible(true);
             regFormAuthBtnsBox.setManaged(true);
+        }
+    }*/
+    //TODO mainChatFxmlStructureUpdate.Added
+    //Метод отображения пенелей GUI в зависимости от сочетания режимов
+    // Авторизован/Неавторизован и Зарегистрирован/Незарегистрирован
+    public void showPanels(boolean isAuthorized, boolean isRegistered) {
+        //Если НЕавторизован, в .т.ч. отлогинился
+        if (!isAuthorized) {
+            //скрываем панель общего чата
+            mainChatPanel.setVisible(false);
+            mainChatPanel.setManaged(false);
+            //и если НЕзарегитрирован
+            if (!isRegistered){
+                //скрываем панель авторизации
+                authFormPanel.setVisible(false);
+                authFormPanel.setManaged(false);
+                //открываем панель регистрации
+                regFormPanel.setVisible(true);
+                regFormPanel.setManaged(true);
+            } else {//если зарегистрирован
+                //окрываем панель авторизации
+                authFormPanel.setVisible(true);
+                authFormPanel.setManaged(true);
+                //скрываем панель регистрации
+                regFormPanel.setVisible(false);
+                regFormPanel.setManaged(false);
+            }
+        } else {//Если авторизован
+            //скрываем панель авторизации
+            authFormPanel.setVisible(false);
+            authFormPanel.setManaged(false);
+            //скрываем панель регистрации
+            regFormPanel.setVisible(false);
+            regFormPanel.setManaged(false);
+            //открываем панель общего чата
+            mainChatPanel.setVisible(true);
+            mainChatPanel.setManaged(true);
         }
     }
 
@@ -214,10 +248,16 @@ public class Controller {
 
                                 //если пришло подтверждение авторизации, переходим в форму чата и прерываем процесс
                                 if (str.startsWith("/authok")) {
-                                    //скрываем элементы GUI для регистрации
-                                    setRegistered(true);
+
+                                    //TODO mainChatFxmlStructureUpdate.Deleted
+                                    /*//скрываем элементы GUI для регистрации
+                                    //setRegistered(true);
                                     //скрываем элементы GUI для авторизации
-                                    setAuthorized(true);
+                                    //setAuthorized(true);*/
+                                    //TODO mainChatFxmlStructureUpdate.Added
+                                    //открываем пенель общего чата, можно начать чатиться
+                                    showPanels(true, true);//Авторизован и зарегистрирован
+
                                     //выделяем полученный с сервера собственный ник пользователя
                                     int splitLimit = 2;
                                     String[] tokens = str.split(" ", splitLimit);
@@ -227,14 +267,20 @@ public class Controller {
 
                                 //если пришло подтверждение регистрации, закрываем форму авторизации и открываем окно приватного чата
                                 if (str.startsWith("/regok")) {
-                                    //скрываем элементы GUI для регистрации
+
+                                    //TODO mainChatFxmlStructureUpdate.Deleted
+                                    /*//скрываем элементы GUI для регистрации
                                     setRegistered(true);
                                     //открываем элементы GUI для авторизации
-                                    setAuthorized(false);
+                                    setAuthorized(false);*/
+                                    //TODO mainChatFxmlStructureUpdate.Added
+                                    //открываем пенель авторизации, нужно авторизоваться после регистрации
+                                    showPanels(false, true);//Неавторизован и зарегистрирован
+
                                 }
                             } else {
                                 //выводим сообщения в панель регистрационной формы
-                                regFormTextArea.appendText(str + "\n");
+                                regFormTextArea.appendText(str + "\n");//FIXME
                             }
                         }
 
@@ -293,12 +339,18 @@ public class Controller {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        //скрываем элементы GUI для регистрации
+
+                        //TODO mainChatFxmlStructureUpdate.Deleted
+                        /*//скрываем элементы GUI для регистрации
                         setRegistered(true);
                         //открываем элементы GUI для авторизации
-                        setAuthorized(false);
+                        setAuthorized(false);*/
+                        //TODO mainChatFxmlStructureUpdate.Added//FIXME выделить в метод setLogOff когда он отлогинится
+                        //открываем панель авторизации, нужно авторизоваться после отлогинивания
+                        showPanels(false, true);//Неавторизован и зарегистрирован
+
                         //выводим сообщение пользователю
-                        regFormTextArea.appendText("Waiting for server connection...Please log in.\n");
+                        regFormTextArea.appendText("Waiting for server connection...Please log in.\n");//FIXME
                     }
                 }
             });
@@ -312,9 +364,13 @@ public class Controller {
     //метод запроса на регистрацию по нажатию элемента регистрация в форме авторизации(upperPanel)
     @FXML
     public void tryToRegister(){
-        //открываем окно регистрационной формы
+        //TODO mainChatFxmlStructureUpdate.Deleted
+        /*//открываем окно регистрационной формы
         setRegistered(false);
-        regFormTextArea.clear();
+        regFormTextArea.clear();*/
+        //TODO mainChatFxmlStructureUpdate.Added
+        //открываем панель регистрации
+        showPanels(false, false);//Неавторизован и Незарегистрирован
     }
 
     //метод запроса на регистрацию(сохранение) данных из регистрационной формы по событию кнопки Отправить
@@ -328,9 +384,12 @@ public class Controller {
             }
         }
         try {
-            //TODO удалить? Лучше очищать перед выводом текста.
+
+            //TODO mainChatFxmlStructureUpdate.Deleted
+            /*//TODO удалить? Лучше очищать перед выводом текста.
             //очищаем поле от старых сообщений
-            regFormTextArea.clear();
+            regFormTextArea.clear();*/
+
             // отправка на сервер запроса на регистрацию данных введенных в форме регистрации
             out.writeUTF("/reg " + regFormNickField.getText() + " " + regFormLoginField.getText() + " " + regFormPasswordField.getText());
 
@@ -345,17 +404,24 @@ public class Controller {
         }
     }
 
-    //Метод по нажатию кнопки в форме регистрации
+    //Метод по нажатию кнопки Cancel в форме регистрации
     @FXML
     public void cancelRegistration(){
-        //возвращаемся из регистрационной формы в авторизационную
-        setRegistered(true);
+
+        //TODO mainChatFxmlStructureUpdate.Deleted
+        /*//возвращаемся из регистрационной формы в авторизационную
+        //setRegistered(true);*/
+        //TODO mainChatFxmlStructureUpdate.Added
+        //открываем панель авторизации, нужно авторизоваться
+        showPanels(false, true);//Неавторизован и зарегистрирован
+
         regFormLoginField.clear();
         regFormPasswordField.clear();
         regFormTextArea.clear();
     }
 
-    //Метод для авторизации. Запускается кнопкой Авторизоваться в форме регистрации(upperPanel)
+    //TODO mainChatFxmlStructureUpdate.Deleted
+    /*//Метод для авторизации. Запускается кнопкой Авторизоваться в форме регистрации(upperPanel)
     @FXML
     public void tryToAuth() {
         if (socket == null || socket.isClosed()) {
@@ -373,6 +439,25 @@ public class Controller {
             out.writeUTF("/auth " + regFormLoginField.getText() + " " + regFormPasswordField.getText());
             regFormLoginField.clear();//очищаем поле логина
             regFormPasswordField.clear();//очищаем поле пароля
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+    //Метод для авторизации. Запускается кнопкой Авторизоваться в акторизационной форме
+    @FXML
+    public void tryToAuth() {
+        if (socket == null || socket.isClosed()) {
+            // сначала подключаемся к серверу, если не подключен(сокет не создан или закрыт)
+            //если сервер еще не запущен, выводим сообщение и пытаемся подключиться в бесконечном цикле
+            while(socket == null || socket.isClosed()){
+                connect();
+            }
+        }
+        try {
+            // отправка сообщений на сервер для авторизации
+            out.writeUTF("/auth " + authFormLoginField.getText() + " " + authFormPasswordField.getText());
+            authFormLoginField.clear();//очищаем поле логина
+            authFormPasswordField.clear();//очищаем поле пароля
         } catch (IOException e) {
             e.printStackTrace();
         }

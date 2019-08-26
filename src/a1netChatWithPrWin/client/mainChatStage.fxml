@@ -147,7 +147,7 @@
             </SplitPane>
 
             <!--Панель регистрационной формы-->
-            <VBox fx:id="registrationForm" focusTraversable="true" layoutX="10.0" layoutY="10.0" managed="true" visible="false">
+            <VBox fx:id="regFormPanel" focusTraversable="true" layoutX="10.0" layoutY="10.0" managed="true" visible="false">
                <children>
                   <BorderPane VBox.vgrow="ALWAYS">
                      <center>
@@ -251,7 +251,7 @@
                </children>
             </VBox>
             <!--Панель авторизационной формы-->
-            <VBox fx:id="authForm" disable="true" focusTraversable="true" layoutX="15.0" layoutY="15.0" managed="true" visible="false">
+            <VBox fx:id="authFormPanel" disable="false" managed="true" visible="true" focusTraversable="true" layoutX="15.0" layoutY="15.0" >
                <children>
                   <BorderPane>
                      <top>
@@ -305,7 +305,7 @@
                               <HBox alignment="CENTER" managed="true" visible="true">
                                  <children>
                                     <!--Кнопка Авторизоваться авторизационной формы-->
-                                    <Button fx:id="authFormAuthBtn" defaultButton="true" managed="true" onAction="#tryToAuth" text="Авторизоваться" visible="true">
+                                    <Button fx:id="authFormAuthBtn" defaultButton="true" managed="true" visible="true" onAction="#tryToAuth" text="Авторизоваться">
                                        <HBox.margin>
                                           <Insets right="5.0" />
                                        </HBox.margin>
