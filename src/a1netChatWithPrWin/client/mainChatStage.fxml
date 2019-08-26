@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?scenebuilder-stylesheet /a1netChatWithPrWin/client/Style_main.css?>
+<!--<?scenebuilder-stylesheet /a1netChatWithPrWin/client/Style_main.css?>-->
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
@@ -29,7 +29,7 @@
       <StackPane AnchorPane.topAnchor="0.0">
          <children>
             <!--Панель общего чата-->
-            <SplitPane fx:id="mainChatPanel" disable="true" managed="false" visible="false" dividerPositions="0.65" >
+            <SplitPane fx:id="mainChatPanel" managed="false" visible="false" dividerPositions="0.65" >
               <items>
                 <!--Левая панель общего чата-->
                 <AnchorPane>
@@ -173,7 +173,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="regFormNickField" promptText="Логин" HBox.hgrow="ALWAYS">
+                                    <TextField fx:id="regFormNickField" promptText="Имя в чате" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
@@ -251,7 +251,7 @@
                </children>
             </VBox>
             <!--Панель авторизационной формы-->
-            <VBox fx:id="authFormPanel" disable="false" managed="true" visible="true" focusTraversable="true" layoutX="15.0" layoutY="15.0" >
+            <VBox fx:id="authFormPanel" managed="true" visible="true" focusTraversable="true" layoutX="15.0" layoutY="15.0" >
                <children>
                   <BorderPane>
                      <top>

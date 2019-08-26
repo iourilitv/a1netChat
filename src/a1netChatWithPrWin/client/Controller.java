@@ -40,7 +40,7 @@ public class Controller {
     @FXML
     VBox regFormTopLabelsBox;
     @FXML
-    HBox regFormNicknameBox;
+    HBox regFormNicknameBox;//TODO лишнее?
     @FXML
     TextField regFormNickField;
     @FXML
@@ -48,19 +48,22 @@ public class Controller {
     @FXML
     PasswordField regFormPasswordField;
     @FXML
-    TextArea regFormTextArea;
+    //TODO mainChatFxmlStructureUpdate.Added
+    //TextArea regFormTextArea;
+    Label regFormBottomLabel;//нижняя метка для вывода сообщений регистрационной формы
+
     @FXML
-    HBox regFormRegBtnsBox;
+    HBox regFormRegBtnsBox;//TODO лишнее?
     @FXML
     Button regFormSendToRegisterBtn;
     @FXML
     Button regFormCancelBtn;
     @FXML
-    HBox regFormAuthBtnsBox;
+    HBox regFormAuthBtnsBox;//TODO лишнее?
     @FXML
-    Button regFormAuthBtn;
+    Button regFormAuthBtn;//TODO лишнее?
     @FXML
-    Button regFormRegisterBtn;
+    Button regFormRegisterBtn;//TODO лишнее?
 
     //***Панель общего чата***
     @FXML
@@ -105,10 +108,11 @@ public class Controller {
     DataInputStream in;
     DataOutputStream out;
 
-    private boolean isAuthorized;
+    private boolean isAuthorized;//TODO лишнее?
     private String chatCompanionNick;//имя партнера по приватному чату
     private PrivateMsgWindow prMsgWindow;//окно приватного сообщения
     private String nick;//свое имя
+    private String regAuthInfoLabel;//временный флаг для выбора метки регистрационной или авторизационной формы
 
     final String IP_ADRESS = "localhost";//IP 127.0.0.1.
     final int PORT = 8189;
@@ -193,6 +197,8 @@ public class Controller {
                 //открываем панель регистрации
                 regFormPanel.setVisible(true);
                 regFormPanel.setManaged(true);
+                //присваеваем временной метке ссылку на метку в регистриционной форме для вывода сервисных сообщений
+                regAuthInfoLabel = "regFormBottomLabel";
             } else {//если зарегистрирован
                 //окрываем панель авторизации
                 authFormPanel.setVisible(true);
@@ -200,6 +206,8 @@ public class Controller {
                 //скрываем панель регистрации
                 regFormPanel.setVisible(false);
                 regFormPanel.setManaged(false);
+                //присваеваем временной метке ссылку на метку в регистриционной форме для вывода сервисных сообщений
+                regAuthInfoLabel = "authFormBottomLabel";
             }
         } else {//Если авторизован
             //скрываем панель авторизации
@@ -228,6 +236,10 @@ public class Controller {
                 public void run() {
                     try {
                         boolean serverClosed = false;
+
+                        //TODO mainChatFxmlStructureUpdate.Added
+                        //устанавливаем флаг на в начале выводим сообщения в метку авторизационной формы
+                        regAuthInfoLabel = "authFormBottomLabel";
 
                         //***Блок для авторизации и регистрации***
                         while (true) {
@@ -279,8 +291,13 @@ public class Controller {
 
                                 }
                             } else {
-                                //выводим сообщения в панель регистрационной формы
-                                regFormTextArea.appendText(str + "\n");//FIXME
+
+                                //TODO mainChatFxmlStructureUpdate.Deleted
+                                /*//выводим сообщения в панель регистрационной формы
+                                regFormTextArea.appendText(str + "\n");*///FIXME
+                                //TODO mainChatFxmlStructureUpdate.Added
+                                //выводим сообщения в панель регистрационной или авторизационной формы
+                                showServiceMessage(str);
                             }
                         }
 
@@ -349,8 +366,11 @@ public class Controller {
                         //открываем панель авторизации, нужно авторизоваться после отлогинивания
                         showPanels(false, true);//Неавторизован и зарегистрирован
 
-                        //выводим сообщение пользователю
-                        regFormTextArea.appendText("Waiting for server connection...Please log in.\n");//FIXME
+                        //TODO mainChatFxmlStructureUpdate.Deleted
+                        /*//выводим сообщение пользователю
+                        regFormTextArea.appendText("Waiting for server connection...Please log in.\n");*/
+                        //выводим сообщения в панель регистрационной или авторизационной формы
+                        showServiceMessage("Waiting for server connection...Please log in.");
                     }
                 }
             });
@@ -359,6 +379,21 @@ public class Controller {
         } catch (IOException e) {
             System.out.println("Waiting for server connection...: " + e);
         }
+    }
+
+    //выводим сервисные сообщения в метку регистрационной или авторизационной панелей
+    private void showServiceMessage(String str) {
+        //TODO Exception in thread "Thread-4" java.lang.IllegalStateException: Not on FX application thread; currentThread = Thread-4.Added
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if(regAuthInfoLabel.equals("authFormBottomLabel")){
+                    authFormBottomLabel.setText(str);
+                } else {
+                    regFormBottomLabel.setText(str);
+                }
+            }
+        });
     }
 
     //метод запроса на регистрацию по нажатию элемента регистрация в форме авторизации(upperPanel)
@@ -371,6 +406,9 @@ public class Controller {
         //TODO mainChatFxmlStructureUpdate.Added
         //открываем панель регистрации
         showPanels(false, false);//Неавторизован и Незарегистрирован
+
+        //TODO mainChatFxmlStructureUpdate.Added
+        authFormBottomLabel.setText("");
     }
 
     //метод запроса на регистрацию(сохранение) данных из регистрационной формы по событию кнопки Отправить
@@ -399,6 +437,9 @@ public class Controller {
             regFormNickField.clear();//очищаем поле имени в чате
             regFormLoginField.clear();//очищаем поле логина
             regFormPasswordField.clear();//очищаем поле пароля
+
+            //TODO mainChatFxmlStructureUpdate.Added
+            regFormBottomLabel.setText("");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -415,9 +456,16 @@ public class Controller {
         //открываем панель авторизации, нужно авторизоваться
         showPanels(false, true);//Неавторизован и зарегистрирован
 
+        //TODO mainChatFxmlStructureUpdate.Added
+        regFormNickField.clear();
+
         regFormLoginField.clear();
         regFormPasswordField.clear();
-        regFormTextArea.clear();
+
+        //TODO mainChatFxmlStructureUpdate.Deleted
+        //regFormTextArea.clear();
+        //TODO mainChatFxmlStructureUpdate.Added
+        regFormBottomLabel.setText("");
     }
 
     //TODO mainChatFxmlStructureUpdate.Deleted
