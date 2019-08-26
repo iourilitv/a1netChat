@@ -21,7 +21,10 @@ import static javafx.scene.text.TextAlignment.RIGHT;
 public class Controller {
 
     @FXML
-    HBox mainChatPanel;
+    //TODO mainChatFxmlStructureUpdate.Deleted
+    //HBox mainChatPanel;
+    //TODO mainChatFxmlStructureUpdate.Deleted
+    SplitPane mainChatPanel;
 
     @FXML
     ScrollPane scrollPaneChat;

@@ -1,78 +1,355 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?scenebuilder-stylesheet /a1netChatWithPrWin/client/Style_main.css?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
-      fx:controller="a1netChatWithPrWin.client.Controller">
-    <stylesheets><URL value="@/a1netChatWithPrWin/client/Style_main.css"></URL> </stylesheets>
+<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="a1netChatWithPrWin.client.Controller">
+   <children>
+      <!--Панели общего чата и форм располагаются друг за другом и показываются по очереди-->
+      <StackPane AnchorPane.topAnchor="0.0">
+         <children>
+            <!--Панель общего чата-->
+            <SplitPane fx:id="mainChatPanel" disable="true" managed="false" visible="false" dividerPositions="0.65" >
+              <items>
+                <!--Левая панель общего чата-->
+                <AnchorPane>
+                     <children>
+                          <!--левая панель для отправки и отображения сообщений в чате-->
+                          <VBox fx:id="mainChatVBox" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <ScrollPane fx:id="scrollPaneChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                  <VBox fx:id="vBoxChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                    <!--для каждого сообщения отдельная метка-->
+                                  </VBox>
+                              </ScrollPane>
+                              <!--нижняя панель для отправки сообщений-->
+                              <HBox fx:id="bottomPanel" managed="true" visible="true">
+                                 <TextField fx:id="textField" onAction="#sendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS">
+                                    <HBox.margin>
+                                        <Insets right="5.0" />
+                                    </HBox.margin>
+                                 </TextField>
+                                 <Button fx:id="btn1" onAction="#sendMsg" text="Send" />
+                              <VBox.margin>
+                                 <Insets top="5.0" />
+                              </VBox.margin>
+                              </HBox>
+                          </VBox>
+                     </children>
+                </AnchorPane>
+                <!--Правая панель списков-->
+                <AnchorPane>
+                     <children>
+                        <VBox layoutY="-1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                           <children>
+                              <MenuBar>
+                                <menus>
+                                  <Menu mnemonicParsing="false" text="View">
+                                    <items>
+                                          <RadioMenuItem mnemonicParsing="false" selected="true" text="Active Users">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="listView" />
+                                             </toggleGroup>
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="A" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator>
+                                          </RadioMenuItem>
+                                          <RadioMenuItem mnemonicParsing="false" text="BlackList" toggleGroup="$listView">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="B" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator>
+                                          </RadioMenuItem>
+                                    </items>
+                                  </Menu>
+                                    <Menu mnemonicParsing="false" text="Option">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Edit My Profile">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="E" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator>
+                                          </MenuItem>
+                                          <MenuItem mnemonicParsing="false" text="Log off">
+                                             <accelerator>
+                                                <KeyCodeCombination alt="DOWN" code="L" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                             </accelerator>
+                                          </MenuItem>
+                                       </items>
+                                    </Menu>
+                                </menus>
+                                 <opaqueInsets>
+                                    <Insets top="5.0" />
+                                 </opaqueInsets>
+                              </MenuBar>
+                              <!--Панели списков располагаются друг за другом и показываются по очереди-->
+                              <StackPane>
+                                 <children>
+                                      <!--кликабельный список Авторизованных пользователей(правая панель)-->
+                                      <ListView fx:id="clientList" managed="true" onMouseClicked="#tryToOpenPrivateMessageWindow" prefHeight="300.0">
+                                       <contextMenu>
+                                          <ContextMenu>
+                                            <items>
+                                              <MenuItem mnemonicParsing="false" text="View profile" />
+                                              <MenuItem mnemonicParsing="false" text="Send private message" />
+                                              <MenuItem mnemonicParsing="false" text="Add to BlackList" />
+                                            </items>
+                                          </ContextMenu>
+                                       </contextMenu>
+                                    </ListView>
+                                    <!--кликабельный список Черного списка пользователей(правая панель)-->
+                                    <ListView fx:id="blackList" managed="true" onMouseClicked="#tryToOpenPrivateMessageWindow" prefHeight="300.0" visible="false">
+                                       <contextMenu>
+                                          <ContextMenu>
+                                             <items>
+                                                <MenuItem mnemonicParsing="false" text="View profile" />
+                                                <MenuItem mnemonicParsing="false" text="Delete from BlackList" />
+                                             </items>
+                                          </ContextMenu>
+                                       </contextMenu>
+                                    </ListView>
+                                 </children>
+                              </StackPane>
+                              <!--метка для отображения названия активного списка. По умолчанию - Авторизованных пользователей(правая панель)-->
+                              <Label fx:id="listViewModeLabel" prefHeight="30.0" text="Active Users">
+                                 <font>
+                                    <Font name="System Italic" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </items>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </SplitPane>
 
-    <!--верхняя панель для авторизации-->
-    <VBox fx:id="registrationForm" managed="true" visible="true">
-        <VBox fx:id="regFormTopLabelsBox" managed="false" visible="false">
-            <Label fx:id="regFormTitleLabel" text="Регистрационная форма"/>
-            <Label text="Придумайте и введите свои данные." wrapText="true"/>
-            <Label text="Уникальный Nickname(имя в чате) и логин," wrapText="true"/>
-            <Label text="состоящие только из латинских букв и цифр" wrapText="true"/>
-            <Label text="Пароль, не менее 8-ми символов, состоящий из:" wrapText="true"/>
-            <Label text="- латинских букв в верхнем и нижнем регистре;" wrapText="true"/>
-            <Label text="- цифр и спецсимволов на клавиатуре." wrapText="true"/>
-        </VBox>
-
-        <HBox fx:id="regFormNicknameBox" managed="false" visible="false">
-            <Label fx:id="regFormNicknameLabel" text="Nickname:" alignment="CENTER_RIGHT"/>
-            <TextField fx:id="regFormNickField" HBox.hgrow="ALWAYS" promptText="Имя в чате"></TextField>
-        </HBox>
-
-        <HBox>
-            <Label fx:id="regFormLoginLabel" text="Логин:" managed="true" visible="true" alignment="CENTER_RIGHT"/>
-            <TextField fx:id="regFormLoginField" HBox.hgrow="ALWAYS" promptText="Логин"></TextField>
-        </HBox>
-
-        <HBox>
-            <Label fx:id="regFormPasswordLabel" text="Пароль:" managed="true" visible="true" alignment="CENTER_RIGHT"/>
-            <PasswordField fx:id="regFormPasswordField" HBox.hgrow="ALWAYS" promptText="Пароль"/>
-        </HBox>
-
-        <!--поле для вывода служебных сообщений во время регистрации-->
-        <TextArea fx:id="regFormTextArea" editable="false" managed="true" visible="true"/>
-
-        <!--кнопки этапа регистрации-->
-        <HBox fx:id="regFormRegBtnsBox" managed="false" visible="false">
-            <!--кнопка отправки запроса на сохранение в БД данных из формы регистрации-->
-            <Button fx:id="regFormSendToRegisterBtn" managed="true" visible="true" text="Отправить" onAction="#getRegistration"/>
-            <!--кнопка отправки запроса на сохранение в БД данных из формы регистрации-->
-            <Button fx:id="regFormCancelBtn" managed="true" visible="true" text="Отмена" onAction="#cancelRegistration"/>
-        </HBox>
-
-        <!--кнопки этапа авторизации-->
-        <HBox fx:id="regFormAuthBtnsBox" managed="true" visible="true">
-            <!--кнопка отправки запроса на авторизацию-->
-            <Button fx:id="regFormAuthBtn" managed="true" visible="true" text="Авторизоваться" onAction="#tryToAuth"/>
-            <!--кнопка отправки запроса на открытие формы регистрации-->
-            <Button fx:id="regFormRegisterBtn" managed="true" visible="true" text="Регистрация" onAction="#tryToRegister"/>
-        </HBox>
-    </VBox>
-
-    <!--разделенная на два панель основного чата-->
-    <HBox fx:id="mainChatPanel" managed="false" visible="false" VBox.vgrow="ALWAYS">
-        <!--левая панель для отправки и отображения сообщений в чате-->
-        <VBox fx:id="mainChatVBox" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-            <ScrollPane fx:id="scrollPaneChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                <VBox fx:id="vBoxChat" managed="true" visible="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                    <!--для каждого сообщения отдельная метка-->
-                </VBox>
-            </ScrollPane>
-            <!--нижняя панель для отправки сообщений-->
-            <!--в момент старта место в ?памяти? под окно не выделяется, пока оно невидимо-->
-            <HBox fx:id="bottomPanel" managed="true" visible="true">
-                <TextField fx:id="textField" onAction="#sendMsg" promptText="Введите текст" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btn1" onAction="#sendMsg" text="Send" />
-            </HBox>
-        </VBox>
-        <!--кликабельный список пользователей(правая панель)-->
-        <ListView fx:id="clientList" managed="true" visible="true" onMouseClicked="#tryToOpenPrivateMessageWindow" ></ListView>
-    </HBox>
-</VBox>
+            <!--Панель регистрационной формы-->
+            <VBox fx:id="registrationForm" focusTraversable="true" layoutX="10.0" layoutY="10.0" managed="true" visible="false">
+               <children>
+                  <BorderPane VBox.vgrow="ALWAYS">
+                     <center>
+                        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <!--Блок верхних меток регистрационной формы-->
+                              <VBox fx:id="regFormTopLabelsBox" managed="true" visible="true">
+                                 <children>
+                                    <Label fx:id="regFormTitleLabel" text="Регистрационная форма" VBox.vgrow="ALWAYS" />
+                                    <Label text="Придумайте и введите свои данные." wrapText="true" />
+                                    <Label text="Уникальный Nickname(имя в чате) и логин," wrapText="true" />
+                                    <Label text="состоящие только из латинских букв и цифр" wrapText="true" />
+                                    <Label text="Пароль, не менее 8-ми символов, состоящий из:" wrapText="true" />
+                                    <Label text="- латинских букв в верхнем и нижнем регистре;" wrapText="true" />
+                                    <Label text="- цифр и спецсимволов на клавиатуре." wrapText="true" />
+                                 </children>
+                              </VBox>
+                              <!--Блок ввода имени регистрационной формы-->
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" managed="true" prefHeight="30.0" prefWidth="70.0" text="Nickname:" textAlignment="CENTER" visible="true">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="regFormNickField" promptText="Логин" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок ввода логина регистрационной формы-->
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" managed="true" prefHeight="30.0" prefWidth="70.0" text="Логин:" textAlignment="CENTER" visible="true">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin></Label>
+                                    <TextField fx:id="regFormLoginField" promptText="Логин" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок ввода пароля регистрационной формы-->
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" managed="true" prefHeight="30.0" prefWidth="70.0" text="Пароль:" textAlignment="CENTER">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin></Label>
+                                    <PasswordField fx:id="regFormPasswordField" promptText="Пароль" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок кнопок регистрационной формы-->
+                              <HBox fx:id="authFormAuthBtnsBox" alignment="CENTER" managed="true" visible="true">
+                                 <children>
+                                    <Button fx:id="regFormSendToRegisterBtn" defaultButton="true" managed="true" onAction="#getRegistration" text="Отправить" visible="true">
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding></Button>
+                                    <Button fx:id="regFormCancelBtn" cancelButton="true" managed="true" onAction="#cancelRegistration" text="Отмена" visible="true">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin></Button>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок нижней метки для вывода сообщений регистрационной формы-->
+                              <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="regFormBottomLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" textAlignment="CENTER" wrapText="true">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </center>
+                  </BorderPane>
+               </children>
+            </VBox>
+            <!--Панель авторизационной формы-->
+            <VBox fx:id="authForm" disable="true" focusTraversable="true" layoutX="15.0" layoutY="15.0" managed="true" visible="false">
+               <children>
+                  <BorderPane>
+                     <top>
+                        <!--Метка заголовка авторизационной формы-->
+                        <Label fx:id="authFormTitleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="350.0" text="Авторизуйтесь, чтобы войти в чат" textAlignment="CENTER" wrapText="true" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <BorderPane.margin>
+                              <Insets bottom="5.0" />
+                           </BorderPane.margin>
+                        </Label>
+                     </top>
+                     <center>
+                        <!--Блок ввода логина, пароля и метки авторизационной формы-->
+                        <VBox prefHeight="300.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <!--Блок ввода логина авторизационной формы-->
+                              <HBox alignment="CENTER" layoutX="15.0" layoutY="15.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" managed="true" prefHeight="30.0" prefWidth="70.0" text="Nickname:" textAlignment="CENTER" visible="true">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="authFormLoginField" promptText="Логин" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок ввода пароля авторизационной формы-->
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" managed="true" prefHeight="30.0" prefWidth="70.0" text="Пароль:" textAlignment="CENTER">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                    <PasswordField fx:id="authFormPasswordField" promptText="Пароль" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Блок кнопок авторизационной формы-->
+                              <HBox alignment="CENTER" managed="true" visible="true">
+                                 <children>
+                                    <!--Кнопка Авторизоваться авторизационной формы-->
+                                    <Button fx:id="authFormAuthBtn" defaultButton="true" managed="true" onAction="#tryToAuth" text="Авторизоваться" visible="true">
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </Button>
+                                    <!--Кнопка Регистрация авторизационной формы-->
+                                    <Button fx:id="authFormRegisterBtn" managed="true" onAction="#tryToRegister" text="Регистрация" visible="true">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <!--Панель нижней метки для вывода сообщений авторизационной формы-->
+                              <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="authFormBottomLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" textAlignment="CENTER" wrapText="true">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </center>
+                  </BorderPane>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </StackPane>
+   </children>
+</AnchorPane>
