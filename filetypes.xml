@@ -6,6 +6,7 @@
       <mapping pattern="mainDB.db" type="Native" />
       <mapping pattern="messageStorage" type="PLAIN_TEXT" />
       <mapping pattern="messageStore" type="PLAIN_TEXT" />
+      <mapping ext="storage" type="PLAIN_TEXT" />
     </extensionMap>
   </component>
 </application>
